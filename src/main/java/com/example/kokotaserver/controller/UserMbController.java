@@ -1,7 +1,7 @@
 package com.example.kokotaserver.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
  * @author KokoTa
  * @since 2026-05-19
  */
-@Controller
+@RestController
 @RequestMapping("/userMb")
 public class UserMbController {
 

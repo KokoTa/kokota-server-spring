@@ -20,3 +20,8 @@ spring:
 
 server:
   port: 8080
+
+mybatis-plus:
+  configuration:
+    # 禁用自动驼峰转换，因为数据库字段已是驼峰写法
+    map-underscore-to-camel-case: false

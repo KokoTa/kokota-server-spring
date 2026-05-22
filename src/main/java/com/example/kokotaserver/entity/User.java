@@ -2,9 +2,8 @@ package com.example.kokotaserver.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Builder;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,11 +14,10 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author KokoTa
- * @since 2026-05-19
+ * @since 2026-05-22
  */
-@Getter
-@Setter
-@ToString
+@Data
+@Builder
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,7 +46,7 @@ public class User implements Serializable {
     /**
      * 性别
      */
-    private Byte gender;
+    private Integer gender;
 
     /**
      * 密码
@@ -80,5 +78,5 @@ public class User implements Serializable {
     /**
      * 是否删除
      */
-    private Byte isDelete;
+    private Integer isDelete;
 }

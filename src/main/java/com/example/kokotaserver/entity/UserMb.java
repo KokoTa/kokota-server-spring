@@ -1,9 +1,8 @@
 package com.example.kokotaserver.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Builder;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -13,11 +12,10 @@ import java.io.Serializable;
  * </p>
  *
  * @author KokoTa
- * @since 2026-05-19
+ * @since 2026-05-22
  */
-@Getter
-@Setter
-@ToString
+@Data
+@Builder
 @TableName("user_mb")
 public class UserMb implements Serializable {
 

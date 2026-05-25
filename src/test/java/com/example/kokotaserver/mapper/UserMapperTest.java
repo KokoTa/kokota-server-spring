@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.kokotaserver.entity.User;
-import com.example.kokotaserver.service.impl.UserServiceImpl;
+import com.example.kokotaserver.service.IUserService;
 
 import net.datafaker.Faker;
 
@@ -14,7 +14,7 @@ import net.datafaker.Faker;
 public class UserMapperTest {
 
   @Autowired
-  private UserServiceImpl userService;
+  private IUserService userService;
 
   @Test
   public void testAdd() {

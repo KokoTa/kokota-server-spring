@@ -23,15 +23,15 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户昵称
-     */
-    private String username;
-
-    /**
      * id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+
+    /**
+     * 用户昵称
+     */
+    private String username;
 
     /**
      * 账号

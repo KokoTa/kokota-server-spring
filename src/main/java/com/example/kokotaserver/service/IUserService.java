@@ -1,6 +1,9 @@
 package com.example.kokotaserver.service;
 
 import com.example.kokotaserver.entity.User;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -30,6 +33,6 @@ public interface IUserService extends IService<User> {
    * @param userPassword 用户密码
    * @return 登录成功返回用户信息，登录失败返回 null
    */
-  User login(String userAccount, String userPassword);
+  User login(String userAccount, String userPassword, HttpServletRequest request);
 
 }

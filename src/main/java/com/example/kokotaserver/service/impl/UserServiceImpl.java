@@ -15,6 +15,8 @@ import org.springframework.util.DigestUtils;
 
 import java.util.Objects;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * <p>
  * 用户 服务实现类
@@ -28,6 +30,8 @@ import java.util.Objects;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
   private static final String SALT = "salt";
+
+  private static final String USER_LOGIN_STATE = "userLoginState";
 
   @Override
   public long registerUser(String userAccount, String userPassword, String checkPassword) {
@@ -72,7 +76,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
   }
 
   @Override
-  public User login(String userAccount, String userPassword) {
+  public User login(String userAccount, String userPassword, HttpServletRequest request) {
     // 判空
     if (StringUtils.isAnyBlank(userAccount, userPassword)) {
       return null;
@@ -100,6 +104,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
       log.info("用户不存在，userAccount={}", userAccount);
       return null;
     }
+    // 用户脱敏
+    user.setUserPassword(null);
+    user.setIsDelete(null);
+    // 设置用户登录状态
+    request.getSession().setAttribute(USER_LOGIN_STATE, user);
     return user;
   }
 

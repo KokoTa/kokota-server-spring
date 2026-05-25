@@ -20,6 +20,8 @@ spring:
   output:
     ansi:
       enabled: always
+  session:
+    timeout: 1d
 
 server:
   port: 8080

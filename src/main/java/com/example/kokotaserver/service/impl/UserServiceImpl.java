@@ -1,5 +1,6 @@
 package com.example.kokotaserver.service.impl;
 
+import com.example.kokotaserver.constant.UserConstant;
 import com.example.kokotaserver.entity.User;
 import com.example.kokotaserver.mapper.UserMapper;
 import com.example.kokotaserver.service.IUserService;
@@ -30,8 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
   private static final String SALT = "salt";
-
-  private static final String USER_LOGIN_STATE = "userLoginState";
 
   @Override
   public long registerUser(String userAccount, String userPassword, String checkPassword) {
@@ -105,10 +104,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
       return null;
     }
     // 用户脱敏
+    user = safeUser(user);
+    // 设置用户登录状态
+    request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, user);
+    return user;
+  }
+
+  @Override
+  public User safeUser(User user) {
     user.setUserPassword(null);
     user.setIsDelete(null);
-    // 设置用户登录状态
-    request.getSession().setAttribute(USER_LOGIN_STATE, user);
     return user;
   }
 

@@ -64,9 +64,14 @@ public class User implements Serializable {
     private String email;
 
     /**
-     * 状态 0 - 正常
+     * 状态 0 - 正常 1 - 禁用
      */
     private Integer userStatus;
+
+    /**
+     * 角色 0 - 普通用户 1 - 管理员
+     */
+    private Integer roleStatus;
 
     /**
      * 创建时间

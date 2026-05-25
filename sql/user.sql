@@ -8,7 +8,8 @@ create table
     userPassword varchar(512) null comment '密码',
     phone varchar(128) null comment '电话',
     email varchar(512) null comment '邮箱',
-    userStatus int default 0 not null comment '状态 0 - 正常',
+    userStatus int default 0 not null comment '状态 0 - 正常 1 - 禁用',
+    roleStatus int default 0 not null comment '角色 0 - 普通用户 1 - 管理员',
     createTime datetime default CURRENT_TIMESTAMP null comment '创建时间',
     updateTime datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     isDelete int default 0 not null comment '是否删除'

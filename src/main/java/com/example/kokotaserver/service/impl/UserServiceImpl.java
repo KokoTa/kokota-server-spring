@@ -112,9 +112,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
   @Override
   public User safeUser(User user) {
+    if (user == null) {
+      return null;
+    }
     user.setUserPassword(null);
     user.setIsDelete(null);
     return user;
+  }
+
+  @Override
+  public User currentUser(HttpServletRequest request) {
+    User user = (User) request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
+    if (user == null) {
+      return null;
+    }
+    user = getById(user.getId());
+    return safeUser(user);
   }
 
 }

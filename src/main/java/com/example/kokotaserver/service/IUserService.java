@@ -37,10 +37,18 @@ public interface IUserService extends IService<User> {
 
   /**
    * 获取当前登录用户的信息
+   *
    * @param request
    * @return 当前登录用户的信息
    */
   User currentUser(HttpServletRequest request);
+
+  /**
+   * 用户退出登录
+   *
+   * @param request
+   */
+  void logout(HttpServletRequest request);
 
   /**
    * 用户脱敏

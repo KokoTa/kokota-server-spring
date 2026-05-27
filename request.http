@@ -27,11 +27,15 @@ content-type: application/json
 POST http://localhost:8080/api/user/delete HTTP/1.1
 content-type: application/json
 
-[
-  100
-]
+{
+  "ids": []
+}
 
 
 ###
 GET http://localhost:8080/api/user/currentUser HTTP/1.1
+
+
+###
+POST http://localhost:8080/api/user/logout HTTP/1.1
 content-type: application/json

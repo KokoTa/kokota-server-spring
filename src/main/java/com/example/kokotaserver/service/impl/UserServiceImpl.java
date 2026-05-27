@@ -130,4 +130,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     return safeUser(user);
   }
 
+  @Override
+  public void logout(HttpServletRequest request) {
+    request.getSession().removeAttribute(UserConstant.USER_LOGIN_STATE);
+  }
+
 }

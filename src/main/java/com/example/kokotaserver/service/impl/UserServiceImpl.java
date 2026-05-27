@@ -1,22 +1,24 @@
 package com.example.kokotaserver.service.impl;
 
-import com.example.kokotaserver.constant.UserConstant;
-import com.example.kokotaserver.entity.User;
-import com.example.kokotaserver.mapper.UserMapper;
-import com.example.kokotaserver.service.IUserService;
+import java.util.Objects;
 
-import lombok.extern.slf4j.Slf4j;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import java.util.Objects;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.kokotaserver.common.ResponseCode;
+import com.example.kokotaserver.constant.UserConstant;
+import com.example.kokotaserver.entity.User;
+import com.example.kokotaserver.exception.BusinessException;
+import com.example.kokotaserver.mapper.UserMapper;
+import com.example.kokotaserver.service.IUserService;
 
-import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -36,29 +38,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
   public long registerUser(String userAccount, String userPassword, String checkPassword) {
     // 判空
     if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
-      return -1;
+      throw new BusinessException(ResponseCode.PARAMS_ERROR, "参数不能为空");
     }
     // 账户不小于4位
     if (userAccount.length() < 4) {
-      return -1;
+      throw new BusinessException(ResponseCode.PARAMS_ERROR, "账户长度小于4位");
     }
     // 密码不小于8位
     if (userPassword.length() < 8) {
-      return -1;
+      throw new BusinessException(ResponseCode.PARAMS_ERROR, "密码长度小于8位");
     }
     // 账户不包含特殊字符
     if (!userAccount.matches("^[a-zA-Z0-9_]+$")) {
-      return -1;
+      throw new BusinessException(ResponseCode.PARAMS_ERROR, "账户包含特殊字符");
     }
     // 密码和确认密码相同
     if (!userPassword.equals(checkPassword)) {
-      return -1;
+      throw new BusinessException(ResponseCode.PARAMS_ERROR, "密码和确认密码不一致");
     }
     // 账户不可重复
     QueryWrapper<User> queryWrapper = new QueryWrapper<>();
     queryWrapper.eq("userAccount", userAccount);
     if (this.count(queryWrapper) > 0) {
-      return -1;
+      throw new BusinessException(ResponseCode.PARAMS_ERROR, "账户已存在");
     }
     // 密码加密
     String encryptedPassword = DigestUtils.md5DigestAsHex(Objects.requireNonNull((SALT + userPassword).getBytes()));
@@ -69,7 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         .build();
     boolean saveResult = this.save(user);
     if (!saveResult) {
-      return -1;
+      throw new BusinessException(ResponseCode.PARAMS_ERROR, "注册失败");
     }
     return user.getId();
   }
@@ -78,19 +80,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
   public User login(String userAccount, String userPassword, HttpServletRequest request) {
     // 判空
     if (StringUtils.isAnyBlank(userAccount, userPassword)) {
-      return null;
+      throw new BusinessException(ResponseCode.PARAMS_ERROR, "参数不能为空");
     }
     // 账户不小于4位
     if (userAccount.length() < 4) {
-      return null;
+      throw new BusinessException(ResponseCode.PARAMS_ERROR, "账户长度小于4位");
     }
     // 密码不小于8位
     if (userPassword.length() < 8) {
-      return null;
+      throw new BusinessException(ResponseCode.PARAMS_ERROR, "密码长度小于8位");
     }
     // 账户不包含特殊字符
     if (!userAccount.matches("^[a-zA-Z0-9_]+$")) {
-      return null;
+      throw new BusinessException(ResponseCode.PARAMS_ERROR, "账户包含特殊字符");
     }
     // 密码加密
     String encryptedPassword = DigestUtils.md5DigestAsHex(Objects.requireNonNull((SALT + userPassword).getBytes()));
@@ -99,10 +101,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     queryWrapper.eq("userAccount", userAccount);
     queryWrapper.eq("userPassword", encryptedPassword);
     User user = this.getOne(queryWrapper);
-    if (user == null) {
-      log.info("用户不存在，userAccount={}", userAccount);
-      return null;
-    }
     // 用户脱敏
     user = safeUser(user);
     // 设置用户登录状态
@@ -111,20 +109,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
   }
 
   @Override
-  public User safeUser(User user) {
-    if (user == null) {
-      return null;
-    }
-    user.setUserPassword(null);
-    user.setIsDelete(null);
-    return user;
-  }
-
-  @Override
   public User currentUser(HttpServletRequest request) {
     User user = (User) request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
     if (user == null) {
-      return null;
+      throw new BusinessException(ResponseCode.NO_LOGIN, "未登录");
     }
     user = getById(user.getId());
     return safeUser(user);
@@ -132,7 +120,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
   @Override
   public void logout(HttpServletRequest request) {
-    request.getSession().removeAttribute(UserConstant.USER_LOGIN_STATE);
+    HttpSession session = request.getSession();
+    if (session.getAttribute(UserConstant.USER_LOGIN_STATE) == null) {
+      throw new BusinessException(ResponseCode.NO_LOGIN, "未登录");
+    }
+    session.removeAttribute(UserConstant.USER_LOGIN_STATE);
+  }
+
+  @Override
+  public User safeUser(User user) {
+    if (user == null) {
+      throw new BusinessException(ResponseCode.PARAMS_ERROR, "用户不存在");
+    }
+    user.setUserPassword(null);
+    user.setIsDelete(null);
+    return user;
   }
 
 }

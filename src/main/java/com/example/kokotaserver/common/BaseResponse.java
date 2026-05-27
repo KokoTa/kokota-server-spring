@@ -5,6 +5,9 @@ import java.io.Serializable;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * 基础响应类
+ */
 @Data
 @Builder
 public class BaseResponse<T> implements Serializable {
@@ -16,5 +19,7 @@ public class BaseResponse<T> implements Serializable {
   private T data;
 
   private String message;
+
+  private String description;
 
 }

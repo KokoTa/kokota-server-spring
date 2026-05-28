@@ -14,14 +14,14 @@ spring:
     name: kokota-server
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://117.72.59.58:3306/kokota
+    url: jdbc:mysql://117.72.59.58:3306/kokota-dev
     username: root
     password: a7f3e9d2c8b1a4f6e0d5c7b9a3e2f1d4c6b8a0e7f9d2c4b6a8e0f3d5c7b9a2e4
+  session:
+    timeout: 1d
   output:
     ansi:
       enabled: always
-  session:
-    timeout: 1d
 
 server:
   port: 8080

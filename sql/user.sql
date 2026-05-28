@@ -1,3 +1,10 @@
+-- 数据库分开发和生产环境
+-- 开发环境：kokota-dev
+-- 生产环境：kokota-prod
+create database if not exists `kokota-dev` character
+set
+  utf8mb4 collate utf8mb4_unicode_ci;
+
 create table
   user (
     id bigint auto_increment comment 'id' primary key,

@@ -115,7 +115,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.example.kokotaserver.KokotaServerApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>
